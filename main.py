@@ -94,7 +94,7 @@ class User:
 
             Name = info["server_name"]
             Map = info["map"]
-            Online = info["player_count"]
+            Online = int(info["player_count"])
             Max_online = info["max_players"]
         except:
             return None, None, 0, 0
