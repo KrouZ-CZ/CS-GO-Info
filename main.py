@@ -50,7 +50,20 @@ class User:
             self.m_settings1()
 
     def query_handler(self, call):
-        pass
+        for player in self.get_players(call.data):
+            msg = "Name: {name}\nScore: {score}".format(**player)
+            self.send(msg)
+
+    def get_players(self, ip):
+        server_adress = ip.split(":")
+        server_adress[1] = int(ip.split(":")[1])
+
+        try:
+            with valve.source.a2s.ServerQuerier(server_adress) as server:
+                players = dict(server.players())['players']
+            return players
+        except:
+            return []
 
     def m_start(self):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -72,13 +85,19 @@ class User:
     def m_info(self):
         data = self.get_info(self.msg.text) # (Name, map, online, max_online)
         form = f"Имя сервера: {data[0]}\nКарта: {data[1]}\nОнлайн: {data[2]}/{data[3]}"
-        self.send(form)
+        markup = types.InlineKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton("Показать игроков", callback_data=self.msg.text)
+        markup.add(btn1)
+        self.send(form, markup)
 
     def mon(self):
         data = self.get_info(self.msg.text)
         if int(data[2]) > self.min_online:
             form = f"Имя сервера: {data[0]}\nКарта: {data[1]}\nОнлайн: {data[2]}/{data[3]}"
-            self.send(form)
+            markup = types.InlineKeyboardMarkup()
+            btn1 = types.InlineKeyboardButton("Показать игроков", callback_data="show_players")
+            markup.add(btn1)
+            self.send(form, markup)
 
     def m_settings1(self):
         self.min_online = int(self.msg.text)
