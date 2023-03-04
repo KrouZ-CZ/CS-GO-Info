@@ -50,7 +50,7 @@ class User:
             self.m_settings1()
 
     def query_handler(self, call):
-        for player in self.get_players(call.data):
+        for player in sorted(self.get_players(call.data), key=lambda pl: dict(pl)["score"]):
             msg = "Name: {name}\nScore: {score}".format(**player)
             self.send(msg)
 
