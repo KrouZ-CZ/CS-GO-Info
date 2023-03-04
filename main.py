@@ -95,7 +95,7 @@ class User:
         if int(data[2]) > self.min_online:
             form = f"Имя сервера: {data[0]}\nКарта: {data[1]}\nОнлайн: {data[2]}/{data[3]}"
             markup = types.InlineKeyboardMarkup()
-            btn1 = types.InlineKeyboardButton("Показать игроков", callback_data="show_players")
+            btn1 = types.InlineKeyboardButton("Показать игроков", callback_data=self.msg.text)
             markup.add(btn1)
             self.send(form, markup)
 
